@@ -1,10 +1,10 @@
-import {SnakeNamingStrategy} from '../src';
+import {PascalNamingStrategy} from '../src';
 
 describe('SnakeNamingStrategy', () => {
-  let strategy: SnakeNamingStrategy;
+  let strategy: PascalNamingStrategy;
 
   beforeAll(() => {
-    strategy = new SnakeNamingStrategy();
+    strategy = new PascalNamingStrategy();
   })
 
   describe('tableName', () => {
@@ -13,7 +13,7 @@ describe('SnakeNamingStrategy', () => {
 
       const result = strategy.tableName(testTableName, '');
 
-      expect(result).toBe('test_table_name');
+      expect(result).toBe('TestTableName');
     });
 
     it('should return table name as customName when custom name was set', () => {

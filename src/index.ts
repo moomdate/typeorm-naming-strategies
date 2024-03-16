@@ -1,1 +1,1 @@
-export { SnakeNamingStrategy } from './snake-naming.strategy';
+export { PascalNamingStrategy } from './pascal-naming.strategy';

@@ -1,14 +1,49 @@
 // Credits to @recurrence
 // https://gist.github.com/recurrence/b6a4cb04a8ddf42eda4e4be520921bd2
 
-import { DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm';
-import { snakeCase } from 'typeorm/util/StringUtils';
+import {DefaultNamingStrategy, NamingStrategyInterface} from 'typeorm';
+import {snakeCase} from 'typeorm/util/StringUtils';
 
-export class SnakeNamingStrategy
+export class PascalNamingStrategy
   extends DefaultNamingStrategy
   implements NamingStrategyInterface {
   tableName(className: string, customName: string): string {
-    return customName ? customName : snakeCase(className);
+    return customName ? customName : this.toPasCal(className);
+  }
+
+  /**
+   * ref https://stackoverflow.com/questions/2970525/converting-a-string-with-spaces-into-camel-case
+   * @param string
+   */
+
+   isPascalCase(input: string) {
+    if (input.charAt(0) !== input.charAt(0).toUpperCase()) {
+      return false;
+    }
+
+    for (let i = 1; i < input.length; i++) {
+      const char = input.charAt(i);
+      if (char === ' ' || char === '_') {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  toPasCal(string: string) {
+    if (this.isPascalCase(string))
+      return string;
+
+    return `${string}`
+      .toLowerCase()
+      .replace(new RegExp(/[-_]+/, 'g'), ' ')
+      .replace(new RegExp(/[^\w\s]/, 'g'), '')
+      .replace(
+        new RegExp(/\s+(.)(\w*)/, 'g'),
+        ($1, $2, $3) => `${$2.toUpperCase() + $3}`
+      )
+      .replace(new RegExp(/\w/), s => s.toUpperCase());
   }
 
   columnName(
@@ -38,10 +73,10 @@ export class SnakeNamingStrategy
   ): string {
     return snakeCase(
       firstTableName +
-        '_' +
-        firstPropertyName.replace(/\./gi, '_') +
-        '_' +
-        secondTableName,
+      '_' +
+      firstPropertyName.replace(/\./gi, '_') +
+      '_' +
+      secondTableName,
     );
   }
 
